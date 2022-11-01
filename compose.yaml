@@ -5,12 +5,6 @@ services:
       - ".:/opt/project"
     command: java -cp /opt/project/target/classes:/opt/project/target/dependency/* com.hazelcast.samples.jet.grpc.EnrichmentServer 50051
 
-  event-generator:
-    image: amazoncorretto:11
-    volumes:
-      - ".:/opt/project"
-    command: java -cp /opt/project/target/classes:/opt/project/target/dependency/* com.hazelcast.samples.jet.grpc.EventGenerator hazelcast:5701
-
   hazelcast:
     image: hazelcast/hazelcast:5.2.0
     environment:

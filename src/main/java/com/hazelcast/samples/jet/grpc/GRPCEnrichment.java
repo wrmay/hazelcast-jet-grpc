@@ -19,21 +19,15 @@ package com.hazelcast.samples.jet.grpc;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.jet.JetService;
-import com.hazelcast.jet.Job;
 import com.hazelcast.jet.grpc.GrpcService;
 import com.hazelcast.jet.pipeline.*;
 import com.hazelcast.samples.jet.grpc.datamodel.Trade;
 import io.grpc.ManagedChannelBuilder;
 
-import java.util.concurrent.CancellationException;
-
-import static com.hazelcast.function.Functions.entryValue;
-import static com.hazelcast.internal.util.EmptyStatement.ignore;
 import static com.hazelcast.jet.datamodel.Tuple2.tuple2;
 import static com.hazelcast.jet.datamodel.Tuple3.tuple3;
 import static com.hazelcast.jet.grpc.GrpcServices.bidirectionalStreamingService;
 import static com.hazelcast.jet.grpc.GrpcServices.unaryService;
-import static com.hazelcast.jet.pipeline.JournalInitialPosition.START_FROM_CURRENT;
 
 /**
  * Demonstrates the usage of the Pipeline API to enrich a data stream. We
@@ -48,14 +42,6 @@ import static com.hazelcast.jet.pipeline.JournalInitialPosition.START_FROM_CURRE
  */
 public final class GRPCEnrichment {
 
-    static final String TRADES = "trades";
-
-    private final HazelcastInstance hz;
-
-    private GRPCEnrichment(HazelcastInstance hz) {
-        this.hz = hz;
-    }
-
     /**
      * Builds a pipeline which enriches the stream with the response from a
      * gRPC service.
@@ -67,12 +53,16 @@ public final class GRPCEnrichment {
      * method.
      */
     public static Pipeline enrichUsingGRPC(String enrichmentServiceHost, int enrichmentServicePort) {
+
+        StreamSource<Trade> embeddedEventGenerator = SourceBuilder.stream("embedded event generator", (context) -> new EventGenerator())
+                .<Trade>fillBufferFn((eventGen, buffer) -> {
+                    for (Trade t : eventGen.getRandomTrades(100)) buffer.add(t);
+                })
+                .build();
+
         // The stream to be enriched: trades
         Pipeline p = Pipeline.create();
-        StreamStage<Trade> trades = p
-                .readFrom(Sources.<Object, Trade>mapJournal(TRADES, START_FROM_CURRENT))
-                .withoutTimestamps()
-                .map(entryValue());
+        StreamStage<Trade> trades = p.readFrom(embeddedEventGenerator).withoutTimestamps();
 
         ServiceFactory<?, ? extends GrpcService<ProductInfoRequest, ProductInfoReply>> productService = unaryService(
                 () -> ManagedChannelBuilder.forAddress(enrichmentServiceHost, enrichmentServicePort).useTransportSecurity().usePlaintext(),
@@ -129,25 +119,4 @@ public final class GRPCEnrichment {
         jet.newJob(GRPCEnrichment.enrichUsingGRPC(enrichmentServiceHost, enrichmentServicePort));
         //new GRPCEnrichment(hz).go();
     }
-
-    private void go() throws Exception {
-        EventGenerator eventGenerator = new EventGenerator(hz.getMap(TRADES));
-        eventGenerator.start();
-        try  {
-            JetService jet = hz.getJet();
-            Pipeline p = enrichUsingGRPC("localhost", 50051);
-            Job job = jet.newJob(p);
-            eventGenerator.generateEventsForFiveSeconds();
-            job.cancel();
-            try {
-                job.join();
-            } catch (CancellationException ignored) {
-                ignore(ignored);
-            }
-        } finally {
-            eventGenerator.shutdown();
-            Hazelcast.shutdownAll();
-        }
-    }
-
 }
