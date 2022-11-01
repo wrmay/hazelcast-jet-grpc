@@ -1,0 +1,9 @@
+hazelcast:
+  jet:
+    enabled: true
+    resource-upload-enabled: true
+  map:
+    trades:
+      event-journal:
+        enabled: true
+        capacity: 100000

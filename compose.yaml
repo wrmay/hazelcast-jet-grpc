@@ -1,0 +1,32 @@
+services:
+  enrichment-service:
+    image: amazoncorretto:11
+    volumes:
+      - ".:/opt/project"
+    command: java -cp /opt/project/target/classes:/opt/project/target/dependency/* com.hazelcast.samples.jet.grpc.EnrichmentServer 50051
+
+  event-generator:
+    image: amazoncorretto:11
+    volumes:
+      - ".:/opt/project"
+    command: java -cp /opt/project/target/classes:/opt/project/target/dependency/* com.hazelcast.samples.jet.grpc.EventGenerator hazelcast:5701
+
+  hazelcast:
+    image: hazelcast/hazelcast:5.2.0
+    environment:
+      JAVA_OPTS: -Dhazelcast.config=/opt/project/src/main/resources/hazelcast.yaml
+    volumes:
+      - ".:/opt/project"
+
+  mancenter:
+    volumes:
+      - ".:/opt/project"
+    ports:
+      - "8080:8080"
+    image: hazelcast/management-center:5.2.0
+
+  hazelcast-shell:
+    image: hazelcast/hazelcast:5.2.0
+    volumes:
+      - ".:/opt/project"
+    command: tail -f /dev/null
