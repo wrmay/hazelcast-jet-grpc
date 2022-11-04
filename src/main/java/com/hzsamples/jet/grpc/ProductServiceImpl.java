@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.hazelcast.samples.jet.grpc;
+package com.hzsamples.jet.grpc;
 
-import com.hazelcast.samples.jet.grpc.ProductServiceGrpc.ProductServiceImplBase;
-import com.hazelcast.samples.jet.grpc.datamodel.Product;
+import com.hzsamples.jet.grpc.datamodel.Product;
 import io.grpc.stub.StreamObserver;
 
 import java.util.Map;
@@ -26,7 +25,7 @@ import java.util.Map;
  * Server-side implementation of a gRPC service. See {@link
  * GRPCEnrichment#enrichUsingGRPC()}.
  */
-public class ProductServiceImpl extends ProductServiceImplBase {
+public class ProductServiceImpl extends ProductServiceGrpc.ProductServiceImplBase {
 
     private final Map<Integer, Product> products;
 

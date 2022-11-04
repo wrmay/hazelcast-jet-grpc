@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.hazelcast.samples.jet.grpc;
+package com.hzsamples.jet.grpc;
 
-import com.hazelcast.samples.jet.grpc.BrokerServiceGrpc.BrokerServiceImplBase;
-import com.hazelcast.samples.jet.grpc.datamodel.Broker;
+import com.hzsamples.jet.grpc.datamodel.Broker;
 import io.grpc.stub.StreamObserver;
 
 import java.util.Map;
@@ -26,7 +25,7 @@ import java.util.Map;
  * Server-side implementation of a gRPC service. See {@link
  * GRPCEnrichment#enrichUsingGRPC()}.
  */
-public class BrokerServiceImpl extends BrokerServiceImplBase {
+public class BrokerServiceImpl extends BrokerServiceGrpc.BrokerServiceImplBase {
 
     private final Map<Integer, Broker> brokers;
 

@@ -1,7 +1,7 @@
-package com.hazelcast.samples.jet.grpc;
+package com.hzsamples.jet.grpc;
 
-import com.hazelcast.samples.jet.grpc.datamodel.Broker;
-import com.hazelcast.samples.jet.grpc.datamodel.Product;
+import com.hzsamples.jet.grpc.datamodel.Broker;
+import com.hzsamples.jet.grpc.datamodel.Product;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 

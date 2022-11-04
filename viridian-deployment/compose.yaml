@@ -1,0 +1,7 @@
+services:
+  enrichment-service:
+    image: 691990859209.dkr.ecr.us-east-2.amazonaws.com/enrichment_service
+    ports:
+      - "50051:50051"
+    command: java -cp ./enrichment-service.jar com.hazelcast.samples.jet.grpc.EnrichmentServer 50051
+

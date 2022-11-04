@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.hazelcast.samples.jet.grpc;
+package com.hzsamples.jet.grpc;
 
-import com.hazelcast.samples.jet.grpc.datamodel.Trade;
+import com.hzsamples.jet.grpc.datamodel.Trade;
 
 import java.util.Random;
 

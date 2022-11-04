@@ -41,6 +41,11 @@ This was tested on an M1 Macbook Pro running MacOS Ventura
 If you wish to run any command using the Hazelcast shell, you can do so with the following command:
 `docker compose run hazelcast-shell /opt/hazelcast/bin/hz-cli ...`
 
+# On Viridian
+
+You will need Hazelcast Enterprise
+
+
 
 
 

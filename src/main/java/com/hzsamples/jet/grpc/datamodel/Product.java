@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hazelcast.samples.jet.grpc.datamodel;
+package com.hzsamples.jet.grpc.datamodel;
 
 import java.io.Serializable;
 

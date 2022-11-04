@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.hazelcast.samples.jet.grpc;
+package com.hzsamples.jet.grpc;
 
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.jet.JetService;
 import com.hazelcast.jet.grpc.GrpcService;
 import com.hazelcast.jet.pipeline.*;
-import com.hazelcast.samples.jet.grpc.datamodel.Trade;
+import com.hzsamples.jet.grpc.datamodel.Trade;
 import io.grpc.ManagedChannelBuilder;
 
 import static com.hazelcast.jet.datamodel.Tuple2.tuple2;
